@@ -19,10 +19,22 @@ markup = types.InlineKeyboardMarkup()
 kartinki = ["Валет", "Дама", "Король", "Туз"]
 summa = 0
 summabot = 0
-summ = []
+global summ 
+global card 
 
-    
-""" @bot.message_handler(content_types='text')
+
+def numbers_to_kartinki(card):
+    for x in range(len(card)):
+        for t in range(11,15):
+            if card[x] == t and t == 11:
+                card[x] = kartinki[0]
+            elif card[x] == t and t == 12:
+                card[x] = kartinki[1]
+            elif card[x] == t and t == 13:
+                card[x] = kartinki[2]
+            elif card[x] == t and t == 14:
+                card[x] = kartinki[3]   
+@bot.message_handler(content_types='text')
 def start(message):
     #getupdates(message)
     btn1 = types.InlineKeyboardButton(text= "Играть", callback_data='yes')
@@ -41,16 +53,7 @@ def blackjack(message):
     card = [random.randint(3, 14),random.randint(3, 14),random.randint(3, 14),random.randint(3, 14)]
     summ = card.copy() 
     msg = bot.send_message(message.from_user.id, str(card))
-    for x in range(len(card)):
-        for t in range(11,15):
-            if card[x] == t and t == 11:
-                card[x] = kartinki[0]
-            elif card[x] == t and t == 12:
-                card[x] = kartinki[1]
-            elif card[x] == t and t == 13:
-                card[x] = kartinki[2]
-            elif card[x] == t and t == 14:
-                card[x] = kartinki[3]               
+    numbers_to_kartinki(card)       
     #card.append(random.randint(11, 14))
     for x in range(len(summ)):
         for t in range(11,15):
@@ -77,12 +80,16 @@ def blackjack(message):
         elif summa == summabot:
             msg2 = bot.send_message(message.from_user.id, "Ничья!", reply_markup=markup)
         elif summa < summabot:
-            msg2 = bot.send_message(message.from_user.id, "Вы проиграли!", reply_markup=markup)
+            if summabot == 21: 
+                msg2 = bot.send_message(message.from_user.id, "У крупье блэкджек. Вы проиграли!", reply_markup=markup)
+            else:
+                msg2 = bot.send_message(message.from_user.id, "Вы проиграли!", reply_markup=markup)
     bot.delete_message(message.from_user.id, msg.message_id)
     time.sleep(5)
-    bot.edit_message_reply_markup(message.from_user.id, msg2.message_id) """
+    bot.edit_message_reply_markup(message.from_user.id, msg2.message_id) 
 """ def getupdates(message, offset = 0):
     response = requests.get('https://api.telegram.org/bot{token}/getUpdates')
     result = response.json()
     print(result) """
 bot.infinity_polling() 
+   
