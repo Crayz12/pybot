@@ -24,8 +24,8 @@ markup = types.InlineKeyboardMarkup()
 kartinki = ["Валет", "Дама", "Король", "Туз"]
 summa = 0
 summabot = 0
-bank = 5000
-
+global summ 
+global card 
 
 
 def numbers_to_kartinki(card):
@@ -79,6 +79,7 @@ def blackjack(message):
         # markup.to_dict
         msg3 = bot.send_message(message.from_user.id, "Карты крупье: "+ str(card[2])+", "+'*****'+'\n'+"Счёт крупье: "+str(summabot), reply_markup=markup.row(btn1))
         time.sleep(0.5)
+<<<<<<< HEAD
         #@bot.callback_query_handler(func=lambda call: True)
         def game():
             if btn1.callback_data == 'pass':
@@ -95,6 +96,19 @@ def blackjack(message):
                     else:
                         msg2 = bot.send_message(message.from_user.id, "Вы проиграли!", reply_markup=markup.row(btn1))
         return 0 
+=======
+        if summa > summabot:
+            bot.send_animation(message.from_user.id, 'https://tenor.com/view/aot-attack-on-titan-gif-21478955')
+            msg2 = bot.send_message(message.from_user.id, "Вы выиграли!", reply_markup=markup)
+            #bot.send_photo(message.from_user.id, 'https://sun9-80.userapi.com/impg/taRHXKr_qUSeGfzCsYeGx6qFj_1yV7bjBG1vpA/j24ntxDjM7g.jpg?size=1080x1080&quality=95&sign=9e4188b54c00ae80411ef33b023be4f9&type=album')
+        elif summa == summabot:
+            msg2 = bot.send_message(message.from_user.id, "Ничья!", reply_markup=markup)
+        elif summa < summabot:
+            if summabot == 21: 
+                msg2 = bot.send_message(message.from_user.id, "У крупье блэкджек. Вы проиграли!", reply_markup=markup)
+            else:
+                msg2 = bot.send_message(message.from_user.id, "Вы проиграли!", reply_markup=markup)
+>>>>>>> 09b70e0431b2beb73465f1360e2d9f28f0024ff5
     bot.delete_message(message.from_user.id, msg.message_id)
     time.sleep(5)
     bot.edit_message_reply_markup(message.from_user.id, msg2.message_id) 
