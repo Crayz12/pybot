@@ -22,21 +22,39 @@ token = '1371006028:AAFn3c6F0DoutVUzdbRhjScdKQPuxXNbC-Y'
 bot = telebot.TeleBot(token)
 markup = types.InlineKeyboardMarkup()
 kartinki = ["Валет", "Дама", "Король", "Туз"]
+global summa 
+global summabot 
 summa = 0
 summabot = 0
 
 
 def numbers_to_kartinki(card):
     for x in range(len(card)):
+        if card[x] == 11:
+            card[x] = kartinki[0]
+        elif card[x] == 12:
+            card[x] = kartinki[1]
+        elif card[x] == 13:
+            card[x] = kartinki[2]
+        elif card[x] == 14:
+            card[x] = kartinki[3]   
+def razdacha(message,card,summa,summabot):
+    summ = card.copy() 
+    msg = bot.send_message(message.from_user.id, str(card))       
+    #card.append(random.randint(11, 14))
+    for x in range(len(summ)):
         for t in range(11,15):
-            if card[x] == t and t == 11:
-                card[x] = kartinki[0]
-            elif card[x] == t and t == 12:
-                card[x] = kartinki[1]
-            elif card[x] == t and t == 13:
-                card[x] = kartinki[2]
-            elif card[x] == t and t == 14:
-                card[x] = kartinki[3]   
+            if summ[x] == t and t !=14:
+                summ[x] = 10
+            elif summ[x] == t and t == 14:
+                summ[x] = 11
+    for i in range(len(summ)):
+        if i%2 == 0:           
+            summa += int(summ[i])
+        else: 
+            summabot += int(summ[i])
+    numbers_to_kartinki(card)
+    return msg
 @bot.message_handler(content_types='text')
 def start(message):
     #getupdates(message)
@@ -53,18 +71,10 @@ def start(message):
 def blackjack(message):
     #getupdates(message)
     card = [random.randint(3, 14),random.randint(3, 14),random.randint(3, 14),random.randint(3, 14)]
-    summ = card.copy() 
-    msg = bot.send_message(message.from_user.id, str(card))
-    numbers_to_kartinki(card)       
-    #card.append(random.randint(11, 14))
-    for x in range(len(summ)):
-        for t in range(11,15):
-            if summ[x] == t and t !=14:
-                summ[x] = 10
-            elif summ[x] == t and t == 14:
-                summ[x] = 11
-    summa = summ[0] + summ[1]
-    summabot = summ[2] + summ[3]
+    razdacha(message,card,summa,summabot)
+    msg = razdacha(message,card,summa,summabot)
+    #if summabot < 16:
+        
     if summa == 21 and summabot != 21:
         bot.send_message(message.from_user.id, "Ваши карты: "+str(card[0])+', '+str(card[1]))
         bot.send_message(message.from_user.id, 'У Вас блекджек, Вы победили!')
